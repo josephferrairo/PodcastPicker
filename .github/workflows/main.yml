@@ -6,9 +6,7 @@ on: [push, pull_request]
 jobs:
   vm-job:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: harmon758/postgresql-action@v1
     - uses: actions/checkout@master
 
     - name: Set up Ruby 2.5.5
@@ -21,20 +19,8 @@ jobs:
       run: sudo apt-get install libpq-dev
 
     - name: Build and create DB
-      env:
-        PG_HOST: localhost
-        PG_DATABASE: postgres
-        PG_PASSWORD: ''
-        PG_PORT: ${{ job.services.postgres.ports['5432'] }}
       run: |
         gem install bundler
+        gem install rubocop
         bundle install --jobs 4 --retry 3
-        bin/rails db:setup
-
-    - name: Run tests
-      env:
-        PGHOST: localhost
-        PGUSER: postgres
-        RAILS_ENV: test
-      run: |
-        bundle exec rspec
+        bundle exec rubocop
