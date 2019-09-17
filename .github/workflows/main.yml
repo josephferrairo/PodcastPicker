@@ -35,7 +35,6 @@ jobs:
       run: sudo apt-get install libpq-dev
 
     - name: Build and create DB
-      working-directory: ./postgres
       env:
         PG_HOST: postgres
         PG_DATABASE: postgres
