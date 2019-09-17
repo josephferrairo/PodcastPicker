@@ -18,12 +18,12 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
         ports:
-        - 5432:5432
+          - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
     - name: Set up Ruby 2.5.5
       uses: actions/setup-ruby@v1
@@ -37,7 +37,7 @@ jobs:
     - name: Build and create DB
       env:
         PG_USER: postgres
-        PG_HOST: localhost
+        PG_HOST: postgres
         PG_DATABASE: postgres
         PG_PASSWORD: postgres
         PG_PORT: ${{ job.services.postgres.ports['5432'] }}
@@ -48,7 +48,7 @@ jobs:
 
     - name: Run tests
       env:
-        PGHOST: localhost
+        PGHOST: postgres
         PGUSER: postgres
         RAILS_ENV: test
       run: |
