@@ -12,32 +12,18 @@ jobs:
     # https://github.com/actions/example-services/tree/master/.github/workflows
     services:
       postgres:
-        image: postgres:10.8
+        image: postgres
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ""
-          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
-        # will assign a random free host port
-        - 5432/tcp
+          - 5432/tcp
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategymatrix
-    strategy:
-      matrix:
-        # Set N number of parallel jobs you want to run tests on.
-        # Use higher number if you have slow tests to split them on more parallel jobs.
-        # Remember to update ci_node_index below to 0..N-1
-        ci_node_total: [2]
-        # set N-1 indexes for parallel jobs
-        # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc
-        ci_node_index: [0, 1]
 
     steps:
     - uses: actions/checkout@v1
 
-    - name: Set up Ruby 2.6
+    - name: Set up Ruby 2.5.5
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.5.5
@@ -48,11 +34,11 @@ jobs:
 
     - name: Build and create DB
       env:
-        # use localhost for the host here because we have specified a container for the job.
-        # If we were running the job on the VM this would be postgres
-        PGHOST: localhost
-        PGUSER: postgres
-        PGPORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+        PG_HOST: postgres
+        PG_USER: postgres
+        PG_DATABASE: postgres
+        PG_PASSWORD: postgres
+        PG_PORT: ${{ job.services.postgres.ports['5432'] }}
         RAILS_ENV: test
       run: |
         gem install bundler
@@ -65,5 +51,4 @@ jobs:
         PGUSER: postgres
         RAILS_ENV: test
       run: |
-        # run tests in Knapsack Pro Regular Mode
         bundle exec rspec
