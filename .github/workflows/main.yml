@@ -22,9 +22,9 @@ jobs:
 
     - name: Build and create DB
       env:
-        PG_HOST: postgres
+        PG_HOST: localhost
         PG_DATABASE: postgres
-        PG_PASSWORD: postgres
+        PG_PASSWORD: ''
         PG_PORT: ${{ job.services.postgres.ports['5432'] }}
       run: |
         gem install bundler
