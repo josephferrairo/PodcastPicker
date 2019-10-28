@@ -48,8 +48,5 @@ jobs:
           bin/rails db:create
           bin/rails db:migrate
 
-      - name: Run Bundler Audit
-        run: bin/bundler-audit --update
-
       - name: Run tests
         run: bin/rspec
