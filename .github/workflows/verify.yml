@@ -12,7 +12,7 @@ jobs:
       postgres:
         image: postgres:11
         env:
-          POSTGRES_USER: postgres
+          POSTGRES_USER: runner
           POSTGRES_DB: PodcastPicker_test
           POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
@@ -41,7 +41,7 @@ jobs:
           yarn install
       - name: Setup test database
         env:
-          PGUSER: postgres
+          PGUSER: runner
           RAILS_ENV: test
           PGHOST: localhost
         run: |
