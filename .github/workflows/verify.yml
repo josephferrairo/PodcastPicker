@@ -12,8 +12,7 @@ jobs:
       postgres:
         image: postgres:11
         env:
-          POSTGRES_USER: scout
-          POSTGRES_DB: scout_test
+          POSTGRES_DB: PodcastPicker_test
           POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
         options: >-
@@ -43,7 +42,6 @@ jobs:
         env:
           RAILS_ENV: test
           PGHOST: localhost
-          PGUSER: scout
         run: |
           bundle exec rake db:create
           bundle exec rake db:migrate
