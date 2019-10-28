@@ -33,3 +33,7 @@ jobs:
           bundle install --jobs 4 --retry 3
           bundle exec rails db:test:prepare
           bundle exec rspec
+      - name: Rubocop Linter
+        uses: andrewmcodes/rubocop-linter-action@v0.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
