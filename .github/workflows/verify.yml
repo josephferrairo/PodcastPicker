@@ -1,0 +1,54 @@
+# .github/workflows/verify.yml
+
+name: Verify
+on: [push, pull_request]
+
+jobs:
+  verify:
+    name: Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_USER: scout
+          POSTGRES_DB: scout_test
+          POSTGRES_PASSWORD: ""
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.5.5
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.13.0
+      - name: Install dependencies
+        run: |
+          sudo apt-get -yqq install libpq-dev chromium-chromedriver
+          gem install bundler
+          bundle install
+          yarn install
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+          PGHOST: localhost
+          PGUSER: scout
+        run: |
+          bin/rails db:create
+          bin/rails db:migrate
+
+      - name: Run Bundler Audit
+        run: bin/bundler-audit --update
+
+      - name: Run tests
+        run: bin/rspec
