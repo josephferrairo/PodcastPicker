@@ -24,7 +24,12 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           RAILS_ENV: test
         run: |
-          sudo apt-get install ruby-full
+          wget http://ftp.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.gz
+          tar -xzvf ruby-2.6.5.tar.gz
+          cd ruby-2.6.5/
+          ./configure
+          make
+          sudo make install
           sudo apt-get -yqq install libpq-dev
           gem install bundler
           bundle install --jobs 4 --retry 3
