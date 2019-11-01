@@ -30,5 +30,5 @@ jobs:
           bundle install --jobs 4 --retry 3
           bundle exec rails db:test:prepare
           bundle exec rspec
-        container:
-          image: ruby:2.6.5
+      container:
+        image: ruby:2.6.5
