@@ -33,5 +33,5 @@ jobs:
           rvm use 2.6.5 --default
           gem install bundler
           bundle install --jobs 4 --retry 3
-          bundle exec rails db:test:prepare
+          bundle exec rake db:test:prepare
           bundle exec rspec
