@@ -20,6 +20,7 @@ jobs:
           base: master
           branch: testing
           branch-suffix: short-commit-hash
+          title: We Did a Thing
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
