@@ -8,7 +8,6 @@ jobs:
       - name: Create a thing
         run: touch this.rb
       - name: Create Pull Request
-        id: cpr
         uses: josephferrairo/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
