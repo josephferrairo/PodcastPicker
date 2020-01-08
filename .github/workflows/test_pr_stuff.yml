@@ -18,6 +18,7 @@ jobs:
               - Wow
           reviewers: josephferrairo
           base: master
+          branch: testing
           branch-suffix: short-commit-hash
       - name: Check outputs
         run: |
