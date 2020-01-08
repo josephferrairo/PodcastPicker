@@ -18,6 +18,7 @@ jobs:
               - Wow
           reviewers: josephferrairo
           base: master
+          branch-suffix: short-commit-hash
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
