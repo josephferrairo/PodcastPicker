@@ -11,8 +11,8 @@ jobs:
           printenv
       - uses: actions/upload-artifact@v1
         with:
-          name: test_file
-          path: ${{ env.PWD }}
+          name: this.rb
+          path: ./
 
   create_pull_request:
     runs-on: ubuntu-latest
