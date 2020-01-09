@@ -11,28 +11,29 @@ jobs:
         with:
           name: test_file
           path: this.rb
+
   create_pull_request:
-      - uses: actions/download-artifact@v1
-        with:
-          name: test_file
-      - name: Create Pull Request
-      - uses: actions/checkout@v2
-        uses: josephferrairo/create-pull-request@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: do a thing
-          body: |
-            Testing
-              - Wow
-          reviewers: josephferrairo
-          base: master
-          branch: testing
-          branch-suffix: short-commit-hash
-          title: We Did a Thing
-
-
-      - name: Check outputs
-        run: |
-          echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v1
+      with:
+        name: test_file
+    - name: Create Pull Request
+    - uses: actions/checkout@v2
+      uses: josephferrairo/create-pull-request@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: do a thing
+        body: |
+          Testing
+            - Wow
+        reviewers: josephferrairo
+        base: master
+        branch: testing
+        branch-suffix: short-commit-hash
+        title: We Did a Thing
+    - name: Check outputs
+      run: |
+        echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
+        echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"
 
