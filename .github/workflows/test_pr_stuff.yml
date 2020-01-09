@@ -10,10 +10,11 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: test_file
-          path: this.rb
+          path: $PWD
 
   create_pull_request:
     runs-on: ubuntu-latest
+    needs: create_file
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v1
@@ -36,4 +37,3 @@ jobs:
         run: |
           echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
           echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"
-
