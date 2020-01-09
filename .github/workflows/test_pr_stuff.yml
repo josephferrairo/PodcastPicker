@@ -6,7 +6,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create a thing
-        run: touch this.rb
+        run: |
+          touch this.rb
+          printenv
       - uses: actions/upload-artifact@v1
         with:
           name: test_file
