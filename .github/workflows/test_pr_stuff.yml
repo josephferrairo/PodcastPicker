@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v1
         with:
-          name: test_file
+          name: this.rb
       - name: Create Pull Request
         uses: josephferrairo/create-pull-request@v2
         with:
