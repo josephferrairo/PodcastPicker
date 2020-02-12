@@ -7,8 +7,7 @@ jobs:
          github.ref != 'refs/heads/production' && \
          !startsWith(github.ref, 'refs/heads/release') && \
          !startsWith(github.ref, 'refs/heads/hotfix')"
-    runs-on: self-hosted
-    container: us.gcr.io/quip-ci/github-actions-ruby:latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
