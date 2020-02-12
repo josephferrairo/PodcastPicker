@@ -7,13 +7,17 @@ jobs:
          github.ref != 'refs/heads/production' && \
          !startsWith(github.ref, 'refs/heads/release') && \
          !startsWith(github.ref, 'refs/heads/hotfix')"
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    container: us.gcr.io/quip-ci/github-actions-ruby:latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
-    - run: git fetch --prune --unshallow
-    - name: Automatic Rebase
-      uses: cirrus-actions/rebase@1.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ github.token }}
+      - name: Rebase Branch
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git fetch --prune --unshallow
+          git rebase origin/master
+          git push origin ${{ github.head_ref }} --force-with-lease
