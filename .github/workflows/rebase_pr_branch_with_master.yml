@@ -2,7 +2,10 @@ name: Rebase PR Branch with Master
 on: [push]
 jobs:
   rebase_pr_branch_with_master:
-    if: "!startsWith(github.ref, 'refs/tags/') && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/production'"
+    if: "!startsWith(github.ref, 'refs/tags/') && \
+    github.ref != 'refs/heads/master' && \
+    github.ref != 'refs/heads/production' && \
+    github.ref != 'refs/heads/release/**'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
