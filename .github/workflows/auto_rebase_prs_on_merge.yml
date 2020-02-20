@@ -1,0 +1,72 @@
+name: Auto Rebase PRs
+on: [pull_request]
+  # push:
+    # branches:
+      # - master
+      # - 'release/**'
+jobs:
+  auto_rebase_prs_on_merge:
+    runs-on: self-hosted
+    container: us.gcr.io/quip-ci/github-actions-ruby:latest
+    services:
+      postgres:
+        image: postgres:9.6.16
+        ports: ['5432:5432']
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: actions/cache@v1.1.2
+        id: cache
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Build App and Run Merge Task
+        env:
+          AFFILIATE_STRIPE_COUPON_ID: ${{ secrets.AFFILIATE_STRIPE_COUPON_ID }}
+          AWS_ACCESS_KEY_ID: test
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: test
+          BUNDLE_GEMS__CONTRIBSYS__COM: ${{ secrets.BUNDLE_GEMS__CONTRIBSYS__COM }}
+          DATABASE_URL: postgres://postgres:@postgres:5432/test
+          EASYPOST_API_KEY: ${{ secrets.EASYPOST_API_KEY }}
+          ELASTICSEARCH_URL: http://localhost:9200
+          HONEYBADGER_API_KEY: test
+          LIVE_SITE: no
+          MAILCHIMP_API_KEY: ${{ secrets.MAILCHIMP_API_KEY }}
+          MANDRILL_API_KEY: ${{ secrets.MANDRILL_API_KEY }}
+          NEWGISTICS_API_KEY: ${{ secrets.NEWGISTICS_API_KEY }}
+          NEWGISTICS_API_URL: ${{ secrets.NEWGISTICS_API_URL }}
+          NEWGISTICS_RETURNS_API_KEY: ${{ secrets.NEWGISTICS_RETURNS_API_KEY }}
+          NEWGISTICS_RETURNS_API_URL: ${{ secrets.NEWGISTICS_RETURNS_API_URL }}
+          NEWGISTICS_MERCHANT_ID: ${{ secrets.NEWGISTICS_MERCHANT_ID }}
+          RAILS_ENV: test
+          SLIDESHOW_AWS_SECRET_ACCESS_KEY: test
+          STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          TAPFILIATE_API_KEY: ${{ secrets.TAPFILIATE_API_KEY }}
+          TAPFILIATE_PROGRAM_ID: ${{ secrets.TAPFILIATE_PROGRAM_ID }}
+          YOTPO_APP_KEY: ${{ secrets.YOTPO_APP_KEY }}
+          YOTPO_SECRET: ${{ secrets.YOTPO_SECRET }}
+          BRAZE_API_KEY: ${{ secrets.BRAZE_API_KEY }}
+          BRAZE_REST_API_ENDPOINT: ${{ secrets.BRAZE_REST_API_ENDPOINT }}
+          BRAZE_APP_ID: ${{ secrets.BRAZE_APP_ID }}
+        run: |
+          gem install bundler -v "1.17.3"
+          bundle install --deployment --jobs 4 --retry 3
+          bundle exec rake db:drop
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+          bundle exec rake db:test:prepare
+          bundle exec rake "ci:auto_rebase_on_merge[${{ secrets.GITHUB_TOKEN }}]"
