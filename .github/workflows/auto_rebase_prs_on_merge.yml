@@ -6,8 +6,9 @@ on: [pull_request]
       # - 'release/**'
 jobs:
   auto_rebase_prs_on_merge:
-    runs-on: self-hosted
-    container: us.gcr.io/quip-ci/github-actions-ruby:latest
+    runs-on: ubuntu-latest
+    # runs-on: self-hosted
+    # container: us.gcr.io/quip-ci/github-actions-ruby:latest
     services:
       postgres:
         image: postgres:9.6.16
