@@ -4,7 +4,8 @@ on:
     types: # This configuration does not affect the page_build event above
       - published
 jobs:
-  rebase_pr_branch_with_master:
+  on_release:
+    if: "!github.event.release.prerelease"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
