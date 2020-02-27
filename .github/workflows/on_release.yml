@@ -1,0 +1,15 @@
+name: Do a thing on release
+on:
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
+jobs:
+  rebase_pr_branch_with_master:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - run: |
+          echo this works
+
